@@ -162,9 +162,9 @@ const MainPage: FunctionComponent = () => {
           onClose={() => {
             setShowactualizar(false);
           }}
-          acttask={(task) => {
+          acttask={(act) => {
             setTasks(tasks.map((task) => {
-              if (task.id === task.id) {
+              if (task.id === act.id) {
                 return { ...task, name: task.name, state: task.state };
               }
               return task;
