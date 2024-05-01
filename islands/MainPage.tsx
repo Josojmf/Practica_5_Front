@@ -3,9 +3,7 @@ import Column from "./Column.tsx";
 import AniadirTarea from "./AniadirTarea.tsx";
 import { useState } from "preact/hooks";
 import { signal } from "@preact/signals";
-
-function createTask() {
-}
+import ActualizarTarea from "./ActualizarTarea.tsx";
 
 type task = {
   id: number;
@@ -23,6 +21,10 @@ const MainPage: FunctionComponent = () => {
     show,
     setShow,
   ] = useState(false);
+  const [
+    showactualizar,
+    setShowactualizar,
+  ] = useState(false);
 
   const [
     selectedTask,
@@ -31,17 +33,82 @@ const MainPage: FunctionComponent = () => {
 
   return (
     <div className="home">
-        {selectedTask !== null  && (
-           <>
-            <div className="taskDetail">
-                
-                <h1>{selectedTask.name}</h1>
-                <p>{selectedTask.state}</p>
-                <button onClick={() => setSelectedTask(null)}>Cerrar</button>
+      {selectedTask !== null && (
+        <>
+          <div className="taskDetail">
+            <div className="ContainerTaskDetailTtitle">
+              <h1 className="TaskDetailTitle">{selectedTask.name}</h1>
             </div>
-            <div className="overlay" onClick={() => setSelectedTask(null)}></div>
-           </>
-        )}
+
+            <p className="TaskDetailState">{selectedTask.state}</p>
+            <button
+              className="TaskDetailButtonClose"
+              onClick={() => setSelectedTask(null)}
+            >
+              Cerrar
+            </button>
+            <button
+              className="TaskDetailButtonActualizarDone"
+              onClick={() =>
+                setTasks(tasks.map((task) => {
+                  if (task.id === selectedTask.id) {
+                    return { ...task, state: "done" };
+                  }
+                  return task;
+                }))}
+            >
+              Done
+            </button>
+            <button
+              className="TaskDetailButtonActualizarInReview"
+              onClick={() =>
+                setTasks(tasks.map((task) => {
+                  if (task.id === selectedTask.id) {
+                    return { ...task, state: "inreview" };
+                  }
+                  return task;
+                }))}
+            >
+              In Review
+            </button>
+
+            <button
+              className="TaskDetailButtonActualizarInProgress"
+              onClick={() =>
+                setTasks(tasks.map((task) => {
+                  if (task.id === selectedTask.id) {
+                    return { ...task, state: "inprogress" };
+                  }
+                  return task;
+                }))}
+            >
+              In Progress
+            </button>{" "}
+            <button
+              className="TaskDetailButtonActualizarToDo"
+              onClick={() =>
+                setTasks(tasks.map((task) => {
+                  if (task.id === selectedTask.id) {
+                    return { ...task, state: "todo" };
+                  }
+                  return task;
+                }))}
+            >
+              To Do
+            </button>
+            <button
+              className="ActualizarColumnaButton"
+              onClick={() => {
+                setShowactualizar(true);
+              }}
+            >
+              Actualizar Tarea
+            </button>
+          </div>
+          <div className="overlaydetail" onClick={() => setSelectedTask(null)}>
+          </div>
+        </>
+      )}
       <div className="ColumnsContainer">
         <button
           className="CrearColumnaButton"
@@ -87,6 +154,21 @@ const MainPage: FunctionComponent = () => {
           }}
           createTask={(task) => {
             setTasks([...tasks, task]);
+          }}
+        />
+      )}
+      {showactualizar && (
+        <ActualizarTarea
+          onClose={() => {
+            setShowactualizar(false);
+          }}
+          acttask={(task) => {
+            setTasks(tasks.map((task) => {
+              if (task.id === task.id) {
+                return { ...task, name: task.name, state: task.state };
+              }
+              return task;
+            }));
           }}
         />
       )}
